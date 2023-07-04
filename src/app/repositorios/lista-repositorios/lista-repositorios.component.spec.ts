@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListaRepositoriosComponent } from './lista-repositorios.component';
+import { AppModule } from 'src/app/app.module';
+import * as moment from 'moment';
 
 describe('ListaRepositoriosComponent', () => {
   let component: ListaRepositoriosComponent;
@@ -8,7 +10,9 @@ describe('ListaRepositoriosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListaRepositoriosComponent ]
+      declarations: [ ListaRepositoriosComponent ],
+      imports: [AppModule],
+      providers: [moment]
     })
     .compileComponents();
   });

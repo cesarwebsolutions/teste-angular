@@ -8,7 +8,7 @@
     </form>
 </div>
 <div class="container">
-    Total = {{totalRepositorios}}
+    <span>{{totalRepositorios.toLocaleString()}} repositorios</span>
     <div class="card my-3" *ngFor="let repositorio of repositorios | paginate: { itemsPerPage: 30, currentPage: page, totalItems: totalRepositorios }">
         <div class="card-body">
             <div class="d-flex">
@@ -17,19 +17,19 @@
             </div>
             <p class="descricao">{{repositorio.description}}</p>
             <div class="d-flex flex-wrap">
-                <a class="p-2" *ngFor="let topicos of repositorio.topics | slice:0:5; let i=index">
-                    {{topicos}}
+                <a class="px-2" *ngFor="let topicos of repositorio.topics | slice:0:5; let i=index">
+                    <span class="stack">{{topicos}}</span>
                 </a>
             </div>
             <div class="d-flex justify-content-start">
                 <div class="d-flex align-middle p-2">
                     <img src="assets/star.svg" alt="">
                     <span class="m-0">
-                         {{repositorio.stargazers_count}}
+                        {{formataNumero(repositorio.stargazers_count)}}
                     </span>
                 </div>
                 <div class="p-2">
-                    <span>{{repositorio.updated_at}}</span>
+                    <span>Atualizado {{calcularDiferenca(repositorio.updated_at)}}</span>
                 </div>
                 <ng-container *ngIf="repositorio.open_issues_count > 0" class="p-2">
                     <div class="p-2">
@@ -40,8 +40,15 @@
         </div>
     </div>
 </div>
-<div class="d-flex justify-content-center">
-    <pagination-controls (pageChange)="mudarPagina($event)" previousLabel="Anterior"
+<ng-container *ngIf="exibirPaginacao">
+    <div class="d-flex justify-content-center">
+        <pagination-controls (pageChange)="mudarPagina($event)" previousLabel="Anterior"
         nextLabel="Próximo"></pagination-controls>
-</div>
+    </div>
+</ng-container>
+<ng-container *ngIf="exibirMensagemDeErro">
+    <div class="container d-flex justify-content-center">
+        <p>Erro ao listar repositorios</p>
+    </div>
+</ng-container>
 <app-loader *ngIf="loader"></app-loader>
