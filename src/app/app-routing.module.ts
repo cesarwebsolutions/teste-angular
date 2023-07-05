@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {path: '', component: ListaRepositoriosComponent},
-  {path: 'issues:full_name', component: ListaIssuesComponent},
+  {path: 'issues/:full_name', component: ListaIssuesComponent},
 ];
 
 @NgModule({

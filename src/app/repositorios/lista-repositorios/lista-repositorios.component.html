@@ -1,15 +1,18 @@
 <div class="container">
     <form [formGroup]="form" (ngSubmit)="listaRepositorios()">
         <div class="input-group my-3">
-            <input type="text" class="form-control" formControlName="repositorio" placeholder="Digite o nome do repositorio" aria-label="Recipient's username"
+            <input type="text" class="form-control" formControlName="repositorio"
+                placeholder="Digite o nome do repositorio" aria-label="Recipient's username"
                 aria-describedby="basic-addon2">
-            <button type="submit" class="input-group-text" id="basic-addon2"><img src="assets/search.svg" alt=""></button>
+            <button [disabled]="!form.valid" type="submit" class="input-group-text" id="basic-addon2"><img src="assets/search.svg"
+                    alt=""></button>
         </div>
     </form>
 </div>
 <div class="container">
-    <span>{{totalRepositorios.toLocaleString()}} repositorios</span>
-    <div class="card my-3" *ngFor="let repositorio of repositorios | paginate: { itemsPerPage: 30, currentPage: page, totalItems: totalRepositorios }">
+    <span *ngIf="totalRepositorios > 0">{{totalRepositorios.toLocaleString()}} repositorios</span>
+    <div class="card my-3"
+        *ngFor="let repositorio of repositorios | paginate: { itemsPerPage: 30, currentPage: page, totalItems: totalRepositorios }">
         <div class="card-body">
             <div class="d-flex">
                 <img src="{{repositorio.owner.avatar_url}}" alt="imagem avatar">
@@ -33,7 +36,10 @@
                 </div>
                 <ng-container *ngIf="repositorio.open_issues_count > 0" class="p-2">
                     <div class="p-2">
-                        <span (click)="listaIssues(repositorio.full_name)">{{repositorio.open_issues_count}} precisando de ajuda!</span>
+                        <a class="btn p-0"
+                            routerLink="issues/{{codificaNomeRepositorio(repositorio.full_name)}}">{{repositorio.open_issues_count}}
+                            problemas
+                            precisando de ajuda!</a>
                     </div>
                 </ng-container>
             </div>
@@ -43,7 +49,7 @@
 <ng-container *ngIf="exibirPaginacao">
     <div class="d-flex justify-content-center">
         <pagination-controls (pageChange)="mudarPagina($event)" previousLabel="Anterior"
-        nextLabel="Próximo"></pagination-controls>
+            nextLabel="Próximo"></pagination-controls>
     </div>
 </ng-container>
 <ng-container *ngIf="exibirMensagemDeErro">
@@ -52,3 +58,6 @@
     </div>
 </ng-container>
 <app-loader *ngIf="loader"></app-loader>
+<ng-container *ngIf="exibirIssues">
+    <app-lista-issues></app-lista-issues>
+</ng-container>

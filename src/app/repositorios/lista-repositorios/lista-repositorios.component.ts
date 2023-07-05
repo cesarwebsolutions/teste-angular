@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ApiGithubService } from 'src/app/services/api-github.service';
 import * as moment from 'moment';
+import { FormatarNumerosService } from 'src/app/services/formatar-numeros.service';
 
 @Component({
   selector: 'app-lista-repositorios',
@@ -17,17 +18,19 @@ export class ListaRepositoriosComponent implements OnInit {
   page = 1
   exibirMensagemDeErro = false
   exibirPaginacao = false
+  exibirIssues = false
+  issues = ''
   constructor(
     private serviceGit: ApiGithubService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private formataNumeroService: FormatarNumerosService
   ) {
     this.form = fb.group({
-      repositorio: new FormControl('', [Validators.required])
+      repositorio: new FormControl('', [Validators.required, Validators.pattern(/^\S.*\S$/)])
     })
   }
 
   ngOnInit(): void {
-
   }
 
   listaRepositorios() {
@@ -63,24 +66,12 @@ export class ListaRepositoriosComponent implements OnInit {
     this.listaRepositorios();
   }
 
-  listaIssues(nomeERepositorio: string) {
-
+  codificaNomeRepositorio(nomeERepositorio: string) {
+    return encodeURIComponent(nomeERepositorio)
   }
 
   formataNumero(numero: number): string {
-    const k = 1000;
-    const mil = 1000000;
-    const bilhao = 1000000000;
-
-    if (numero >= bilhao) {
-      return (numero / bilhao).toFixed(1) + 'bi';
-    } else if (numero >= mil) {
-      return (numero / mil).toFixed(1) + 'mi';
-    } else if (numero >= k) {
-      return (numero / k).toFixed(1) + 'k';
-    } else {
-      return numero.toString();
-    }
+    return this.formataNumeroService.formataNumero(numero)
   }
 
   calcularDiferenca(dataPassada: any) {
@@ -90,6 +81,7 @@ export class ListaRepositoriosComponent implements OnInit {
   }
 
   resetarVariaveisAoListar() {
+    this.exibirMensagemDeErro = false
     this.exibirPaginacao = false
     this.loader = true
     this.repositorios = []

@@ -14,8 +14,13 @@ export class ApiGithubService {
   ) { }
 
   listaRepositorios(repositorio: string, params:any){
-    console.log(params)
     let url = `${this.baseUrl}repositories?q=${repositorio}`
+
+    return this.http.get(url, { params })
+  }
+
+  listaIssues(nomeRepositorio: string, params: any){
+    let url = `${this.baseUrl}issues?q=repo:${nomeRepositorio}`
 
     return this.http.get(url, { params })
   }
