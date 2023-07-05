@@ -22,28 +22,25 @@ export class ListaRepositoriosComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.form = fb.group({
-      repositorio: new FormControl('node', [Validators.required])
+      repositorio: new FormControl('', [Validators.required])
     })
   }
 
   ngOnInit(): void {
-    this.listaRepositorios()
+
   }
 
   listaRepositorios() {
     this.resetarVariaveisAoListar()
     const params = this.parametros(this.page);
-    console.log(this.form.get('repositorio')?.value)
     this.serviceGit.listaRepositorios(this.form.get('repositorio')?.value, params).subscribe((resp: any) => {
       this.loader = false
       const { items, total_count } = resp
-
       if (total_count > 0) {
         this.exibirPaginacao = true
       }
       this.totalRepositorios = total_count
       this.repositorios = items
-      console.log(resp)
     }, err => {
       this.exibirPaginacao = false
       this.loader = false
@@ -62,7 +59,6 @@ export class ListaRepositoriosComponent implements OnInit {
   }
 
   mudarPagina(event: number): void {
-    console.log(event)
     this.page = event;
     this.listaRepositorios();
   }
